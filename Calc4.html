@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="Calc.css" />
+    <title>19*19</title>
+</head>
+
+<body>
+    <!-- タイマー部分 -->
+    <div class="conteiner">
+        <div id="timer">00:00,000</div>
+    </div>
+    <div id="board"> </div>
+    <script type="text/javascript">
+        const minNum = 0; //最小値
+        const maxNum = 19; // 最大値
+        const elmNums = [0, 1, 10]; //　除外する数
+        const realMin = 2; //　実質最小値
+        const shuffle = ([...array]) => {
+            for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+            }
+        let original_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+        let numbers = shuffle(original_numbers);
+        let num_numbers = maxNum - minNum + 1;
+        let num_calc = new Array(num_numbers); //各数の残り出現回数
+        for (var x = 0; x < num_numbers; x++){
+            num_calc[x] = new Array(num_numbers);
+            for( var y = 0; y < num_numbers; y++){
+                if(elmNums.includes(numbers[x]) || elmNums.includes(numbers[y])){
+                    num_calc[x][y] = 0; //除外する数に含まれてる数の出現回数を０にする
+                }else if( (numbers[x] >= 2) && (numbers[x] <= 9) && (numbers[y] >= 2) && ( numbers[y] <= 9)){
+                    num_calc[x][y] = 0; //九九の出現回数は０に
+                }else if ((numbers[x] >= 2) && (numbers[x] <= 9) && (numbers[y] == 11)){
+                    num_calc[x][y] = 0; //(2から9)x 11の出現回数を０に
+                }else if ((numbers[x] == 11) && (numbers[y] >= 2) && ( numbers[y] <= 9)){
+                        num_calc[x][y] = 0; //　11 x (2から9)の出現回数を０に
+                }else{
+                    num_calc[x][y] = 1; //出現回数
+                }
+            }
+        }
+        var i, j;
+        i = 0;
+        j = 0;
+        show(i, j);
+        const timer = document.getElementById('timer');
+        var startTime;
+        //startボタンを押した時にイベントが起動
+
+        startTime = Date.now();
+        console.log(startTime);
+        console.log(new Date(startTime))
+        countUp();
+
+        //coutUp()関数の中身
+        function countUp() {
+            const d = new Date(Date.now() - startTime);
+            const m = String(d.getMinutes()).padStart(2, "0");
+            const s = String(d.getSeconds()).padStart(2, "0");
+            const ms = String(d.getMilliseconds()).padStart(3, "0");
+            timer.textContent = `${m}:${s},${ms}`;
+
+            stopwatch = setTimeout(() => {
+                countUp();
+            }, 10);
+        }
+        
+        function show(i, j) {
+            let question = "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=</p>";
+            document.getElementById('board').innerHTML = question;
+        }
+        function getNextIdx(i, j){           
+            x = i;
+            for( var y = j; y < num_numbers; y++){
+                console.log(x, y);
+                if(num_calc[x][y] >= 1)
+                    return [x, y];
+            }
+            for(var x = i + 1; x < num_numbers; x++){
+                for( var y = realMin; y < num_numbers; y++){
+                    console.log(x, y);
+                    if(num_calc[x][y] >= 1)
+                        return [x, y];
+                }
+            }
+            for(var x = realMin; x < num_numbers; x++){
+                for( var y = realMin; y < num_numbers; y++){
+                    if(num_calc[x][y] >= 1)
+                        return [x, y];
+                }
+            }
+        }
+        function calc() {
+            let answer = document.getElementById('id01').value;
+            let result = (answer == numbers[i] * numbers[j]) ? true : false;
+            let response = "";
+            if (result) {
+                num_calc[i][j] -= 1;
+                if(num_calc.flat().every(e => e == 0 )){
+                    response = "END";
+                    clearInterval(stopwatch);
+                    document.getElementById('board').innerHTML = response;
+                }
+                let idx = new Array(2);
+                if (i == (num_numbers - 1 ) && j == (num_numbers - 1 )) {
+                    console.log("A");
+                    idx = getNextIdx(realMin, realMin);
+                }
+                else if (i != (num_numbers - 1 ) && j == (num_numbers - 1 )){
+                    console.log("B");
+                    idx = getNextIdx(i + 1, realMin);
+                }
+                else{
+                    console.log("C");
+                    idx = getNextIdx(i, j + 1)
+                }        
+                i = idx[0];
+                j = idx[1];
+                response =  "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=</p>";
+                document.getElementById('board').innerHTML = response;
+            }else{
+                num_calc[i][j] += 1;
+                response =  "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=" + + String(numbers[i] * numbers[j]) + "</p>";
+                document.getElementById('board').innerHTML = response;
+            }
+            document.getElementById('id01').value = "";
+        }
+    
+    </script>
+    <input type="text" id="id01" autofocus>
+
+    <script>
+        var btn = document.getElementById('exe_botan');
+        // Enterキー押下時、送信処理が実行する
+        window.document.onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                calc();
+            }
+        }
+
+
+    </script>
+</body>

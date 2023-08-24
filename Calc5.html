@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="Calc.css" />
+    <title>19*19</title>
+</head>
+
+<body>
+    <!-- タイマー部分 -->
+    <div class="conteiner">
+        <div id="timer">00:00,000</div>
+    </div>
+    <div id="board"> </div>
+    <script type="text/javascript">
+        const minNum = 0; //最小値
+        const maxNum = 19; // 最大値
+        const elmNums = [0, 1, 10]; //　除外する数
+        const realMin = 2; //　実質最小値
+        const shuffle = ([...array]) => {
+            for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+            }
+        let original_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+        let numbers = shuffle(original_numbers);
+        let num_numbers = maxNum - minNum + 1;
+        let question_array = new Array(19*19); //問題の文字列を保持する配列
+        let answer_array = new Array(num_numbers); //解答の文字列を保持する配列
+        let num_calc = new Array(num_numbers); //各数の残り出現回数
+        let k = 0;
+        // 19x19の問題作成
+        for (var x = 0; x < num_numbers; x++){
+            for( var y = 0; y < num_numbers; y++){
+                if(elmNums.includes(x) || elmNums.includes(y)){
+                    continue; //除外する数に含まれてる数
+                }else if( (x >= 2) && (x <= 9) && (y >= 2) && (y <= 9)){
+                    continue; //九九
+                }else if ((x >= 2) && (x <= 9) && (y == 11)){
+                    continue; //(2から9)x 11
+                }else if ((x == 11) && (y >= 2) && ( y <= 9)){
+                    continue; //　11 x (2から9)
+                }else{
+                    question_array[k] = "<h2>問題</h2><p>" + String(x) + "×" + String(y) + "=";
+                    answer_array[k] =  x * y;
+                    num_calc[k] = 1; //出現回数
+                    k = k + 1;
+                }
+            }
+        }
+        // 平方根の問題作成
+
+
+
+
+        
+        max_k = k;
+        arrayShuffle(question_array, answer_array, num_calc, max_k);
+        k = 0;
+        show(k);
+        const timer = document.getElementById('timer');
+        var startTime;
+        //startボタンを押した時にイベントが起動
+
+        startTime = Date.now();
+        console.log(startTime);
+        console.log(new Date(startTime))
+        countUp();
+
+        //coutUp()関数の中身
+        function countUp() {
+            const d = new Date(Date.now() - startTime);
+            const m = String(d.getMinutes()).padStart(2, "0");
+            const s = String(d.getSeconds()).padStart(2, "0");
+            const ms = String(d.getMilliseconds()).padStart(3, "0");
+            timer.textContent = `${m}:${s},${ms}`;
+
+            stopwatch = setTimeout(() => {
+                countUp();
+            }, 10);
+        }
+        function arrayShuffle(a, b, c, len) {
+        for(var i = (len - 1); 0 < i; i--){
+            // 0〜(i+1)の範囲で値を取得
+
+            var r = Math.floor(Math.random() * (i + 1));
+            // 要素の並び替えを実行
+            var tmpa = a[i];
+            var tmpb = b[i];
+            var tmpc = c[i];
+            a[i] = a[r];
+            b[i] = b[r];
+            c[i] = c[r];
+            a[r] = tmpa;
+            b[r] = tmpb;
+            c[r] = tmpc;
+            }
+            return ;
+        }
+        function show(k) {
+            document.getElementById('board').innerHTML = question_array[k];
+        }
+        function getNextIdx(k){           
+            for( var x = k + 1; x < max_k; x++){
+                console.log("A", x);
+                if(num_calc[x] >= 1)
+                    return [x];
+            }
+            for(var x = 0; x < max_k; x++){
+                console.log("C", x, y);
+                if(num_calc[x] >= 1)
+                    return [x];
+            }
+        }
+        
+        function calc() {
+            let answer = document.getElementById('id01').value;
+            let result = (answer == answer_array[k]) ? true : false;
+            let response = "";
+            if (result) {
+                console.log("A");
+                num_calc[k] -= 1;
+                if(num_calc.flat().every(e => e == 0 )){
+                    response = "END";
+                    clearInterval(stopwatch);
+                    document.getElementById('board').innerHTML = response;
+                }
+                let idx = new Array(2);
+                console.log("C");
+                idx = getNextIdx(k);
+                k = idx[0];
+                response =  question_array[k]
+                document.getElementById('board').innerHTML = response;
+            }else{
+                num_calc[k] += 1;
+                response = question_array[k] + answer_array[k] + "</p>";
+                document.getElementById('board').innerHTML = response;
+            }
+            document.getElementById('id01').value = "";
+        }
+    
+    </script>
+    <input type="text" id="id01" autofocus>
+
+    <script>
+        var btn = document.getElementById('exe_botan');
+        // Enterキー押下時、送信処理が実行する
+        window.document.onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                calc();
+            }
+        }
+
+
+    </script>
+</body>

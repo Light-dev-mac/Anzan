@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="Calc.css" />
+    <title>19*19</title>
+</head>
+
+<body>
+    <!-- タイマー部分 -->
+    <div class="conteiner">
+        <div id="timer">00:00,000</div>
+    </div>
+    <div id="board"> </div>
+    <script type="text/javascript">
+        let minNum = 2;
+        let maxNum = 19;
+        let elm_num = 1;
+        let numbers = new Array(maxNum - minNum + 1 - elm_num);
+        for (var x = 0; x < numbers.length; x++){
+            if( x + minNum < 10 )
+                numbers[x] = x + minNum;
+            else if( (x + minNum) >= 10 )
+                numbers[x] = x + minNum + 1;
+        }
+        var i, j;
+        i = 0;
+        j = 0;
+        show(i, j);
+        const timer = document.getElementById('timer');
+        var startTime;
+        //startボタンを押した時にイベントが起動
+
+        startTime = Date.now();
+        console.log(startTime);
+        console.log(new Date(startTime))
+        countUp();
+        
+        //coutUp()関数の中身
+        function countUp() {
+            const d = new Date(Date.now() - startTime);
+            const m = String(d.getMinutes()).padStart(2, "0");
+            const s = String(d.getSeconds()).padStart(2, "0");
+            const ms = String(d.getMilliseconds()).padStart(3, "0");
+            timer.textContent = `${m}:${s},${ms}`;
+
+            stopwatch = setTimeout(() => {
+                countUp();
+            }, 10);
+        }
+        
+        function show(i, j) {
+            let question = "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=</p>";
+            document.getElementById('board').innerHTML = question;
+        }
+        function calc() {
+            let answer = document.getElementById('id01').value;
+            let result = (answer == numbers[i] * numbers[j]) ? true : false;
+            let response = "";
+            if (result) {
+                if (i == (numbers.length - 1 ) && j == (numbers.length - 1 )) {
+                    response = "END";
+                    clearInterval(stopwatch);
+                }
+                else if (i != (numbers.length - 1 ) && j == (numbers.length - 1 )) {
+                    i = i + 1;
+                    j = 0;
+                    response = "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=</p>";
+                } else if (j != (numbers.length - 1 )) {
+                    j = j + 1;
+                    response = "<h2>問題</h2><p>" + String(numbers[i]) + "×" + String(numbers[j]) + "=</p>";
+                }
+                document.getElementById('board').innerHTML = response;
+                document.getElementById('id01').value = "";
+            }
+
+        }
+    </script>
+    <input type="text" id="id01" autofocus>
+
+    <script>
+        var btn = document.getElementById('exe_botan');
+        // Enterキー押下時、送信処理が実行する
+        window.document.onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                calc();
+            }
+        }
+
+
+    </script>
+
+</body>

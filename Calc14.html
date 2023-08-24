@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="Calc.css" />
+    <title>19*19</title>
+</head>
+
+<body>
+    <!-- タイマー部分 -->
+    <div class="conteiner">
+        <div id="timer">00:00,000</div>
+    </div>
+    <div id="board"> </div>
+    <script type="text/javascript">
+        const minNum = 0; //最小値
+        const maxNum = 19; // 最大値
+        const elmNums = [0, 1, 10]; //　除外する数
+        const realMin = 2; //　実質最小値
+        const shuffle = ([...array]) => {
+            for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+            }
+        let original_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+        let numbers = shuffle(original_numbers);
+        let num_numbers = maxNum - minNum + 1;
+        let question_array = new Array(1000); //問題の文字列を保持する配列
+        let answer_array = new Array(1000); //解答の文字列を保持する配列
+        let num_calc = new Array(1000); //各数の残り出現回数
+        let k = 0;
+        // 19x19の問題作成
+        for (var x = 0; x < num_numbers; x++){
+            for( var y = 0; y < num_numbers; y++){
+                if(elmNums.includes(x) || elmNums.includes(y)){
+                    continue; //除外する数に含まれてる数
+                }else if( (x >= 2) && (x <= 9) && (y >= 2) && (y <= 9)){
+                    continue; //九九
+                }else if ((x >= 2) && (x <= 9) && (y == 11)){
+                    continue; //(2から9)x 11
+                }else if ((x == 11) && (y >= 2) && ( y <= 9)){
+                    continue; //　11 x (2から9)
+                }else{
+                    question_array[k] = "<h2>問題</h2><p>" + String(x) + "×" + String(y) + "=";
+                    answer_array[k] =  x * y;
+                    num_calc[k] = 1; //出現回数
+                    k = k + 1;
+                }
+            }
+        }
+        // 優しい積
+        question_array[k] = "<h2>問題</h2><p> 21 × 5 =";
+        answer_array[k] =  105;
+        num_calc[k] = 1; //出現回数
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 23 × 9 =";
+        answer_array[k] =  207;
+        num_calc[k] = 1; //出現回数     
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 25 × 8 =";
+        answer_array[k] =  200;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 26 × 4 =";
+        answer_array[k] =  104;
+        num_calc[k] = 1; //出現回数    
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 26 × 8 =";
+        answer_array[k] =  208;
+        num_calc[k] = 1; //出現回数   
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 27 × 4 =";
+        answer_array[k] =  108;
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        question_array[k] = "<h2>問題</h2><p> 29 × 7 =";
+        answer_array[k] =  203;
+        num_calc[k] = 1; //出現回数  
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 34 × 3 =";
+        answer_array[k] =  102;
+        num_calc[k] = 1; //出現回数    
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 34 × 6 =";
+        answer_array[k] =  204;
+        num_calc[k] = 1; //出現回数   
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 34 × 9 =";
+        answer_array[k] =  306;
+        num_calc[k] = 1; //出現回数  
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 35 × 3 =";
+        answer_array[k] =  105;
+        num_calc[k] = 1; //出現回数      
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 36 × 3 =";
+        answer_array[k] =  108;
+        num_calc[k] = 1; //出現回数  
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 38 × 8 =";
+        answer_array[k] =  304;
+        num_calc[k] = 1; //出現回数   
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 41 × 5 =";
+        answer_array[k] =  205;
+        num_calc[k] = 1; //出現回数  
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 43 × 7 =";
+        answer_array[k] =  301;
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        question_array[k] = "<h2>問題</h2><p> 44 × 7 =";
+        answer_array[k] =  308;
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        question_array[k] = "<h2>問題</h2><p> 45 × 9 =";
+        answer_array[k] =  405;
+        num_calc[k] = 1; //出現回数     
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 51 × 2 =";
+        answer_array[k] =  102;
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        question_array[k] = "<h2>問題</h2><p> 51 × 4 =";
+        answer_array[k] =  204;
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        question_array[k] = "<h2>問題</h2><p> 51 × 6 =";
+        answer_array[k] =  306;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 51 × 8 =";
+        answer_array[k] =  408;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 52 × 2 =";
+        answer_array[k] =  104;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 52 × 4 =";
+        answer_array[k] =  208;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 53 × 2 =";
+        answer_array[k] =  106;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 54 × 2 =";
+        answer_array[k] =  108;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 56 × 9 =";
+        answer_array[k] =  504;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 61 × 5 =";
+        answer_array[k] =  305;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 63 × 8 =";
+        answer_array[k] =  504;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 67 × 3 =";
+        answer_array[k] =  201;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 67 × 6 =";
+        answer_array[k] =  402;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 67 × 9 =";
+        answer_array[k] =  603;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 68 × 3 =";
+        answer_array[k] =  204;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 68 × 6 =";
+        answer_array[k] =  408;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 72 × 7 =";
+        answer_array[k] =  504;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 76 × 4 =";
+        answer_array[k] =  304;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 76 × 8 =";
+        answer_array[k] =  608;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 77 × 4 =";
+        answer_array[k] =  308;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 78 × 9 =";
+        answer_array[k] =  702;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 81 × 5 =";
+        answer_array[k] =  405;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 84 × 6 =";
+        answer_array[k] =  504;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 88 × 8 =";
+        answer_array[k] =  704;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 89 × 9 =";
+        answer_array[k] =  801;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        //立方数
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 3 =";
+        answer_array[k] =  8;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 3 ^ 3 =";
+        answer_array[k] =  27;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 4 ^ 3 =";
+        answer_array[k] =  64;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 5 ^ 3 =";
+        answer_array[k] =  125;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 6 ^ 3 =";
+        answer_array[k] =  216;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 7 ^ 3 =";
+        answer_array[k] =  343;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 8 ^ 3 =";
+        answer_array[k] =  512;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 9 ^ 3 =";
+        answer_array[k] =  729;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 11 ^ 3 =";
+        answer_array[k] =  1331;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 12 ^ 3 =";
+        answer_array[k] =  1728;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 13 ^ 3 =";
+        answer_array[k] =  2197;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 14 ^ 3 =";
+        answer_array[k] =  2744;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 15 ^ 3 =";
+        answer_array[k] =  3375;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 16 ^ 3 =";
+        answer_array[k] =  4096;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 17 ^ 3 =";
+        answer_array[k] =  4913;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 18 ^ 3 =";
+        answer_array[k] =  5832;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        question_array[k] = "<h2>問題</h2><p> 19 ^ 3 =";
+        answer_array[k] =  6859;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;
+        //累乗
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 4 =";
+        answer_array[k] =  16;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 5 =";
+        answer_array[k] =  32;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 6 =";
+        answer_array[k] =  64;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 7 =";
+        answer_array[k] =  128;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 8 =";
+        answer_array[k] =  256;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 9 =";
+        answer_array[k] =  512;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 10 =";
+        answer_array[k] =  1024;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 11 =";
+        answer_array[k] =  2048;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 12 =";
+        answer_array[k] =  4096;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 13 =";
+        answer_array[k] =  8192;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 14 =";
+        answer_array[k] =  16384;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 15 =";
+        answer_array[k] =  32768;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2 ^ 16 =";
+        answer_array[k] =  65536;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3 ^ 4 =";
+        answer_array[k] =  81;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3 ^ 5 =";
+        answer_array[k] =  243;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3 ^ 6 =";
+        answer_array[k] =  729;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 5 ^ 4 =";
+        answer_array[k] =  625;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 5 ^ 5 =";
+        answer_array[k] =  3125;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;   
+        //分数   
+        question_array[k] = "<h2>問題</h2><p> 1/20 =";
+        answer_array[k] =  0.05;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3/20 =";
+        answer_array[k] =  0.15;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/4 =";
+        answer_array[k] =  0.25;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 7/20 =";
+        answer_array[k] =  0.35;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 9/20 =";
+        answer_array[k] =  0.45;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 11/20 =";
+        answer_array[k] =  0.55;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 13/20 =";
+        answer_array[k] =  0.65;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3/4 =";
+        answer_array[k] =  0.75;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 17/20 =";
+        answer_array[k] =  0.85;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 19/20 =";
+        answer_array[k] =  0.95;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/5 =";
+        answer_array[k] =  0.2;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 2/5 =";
+        answer_array[k] =  0.4;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3/5 =";
+        answer_array[k] =  0.6;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 4/5 =";
+        answer_array[k] =  0.8;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/25 =";
+        answer_array[k] =  0.04;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/125 =";
+        answer_array[k] =  0.008;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/8 =";
+        answer_array[k] =  0.125;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 3/8 =";
+        answer_array[k] =  0.375;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 5/8 =";
+        answer_array[k] =  0.625;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 7/8 =";
+        answer_array[k] =  0.875;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 1/16 =";
+        answer_array[k] =  0.0625;
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;             
+        //小数
+        question_array[k] = "<h2>問題</h2><p> 0.05 =";
+        answer_array[k] =  "1/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.15 =";
+        answer_array[k] =  "3/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.25 =";
+        answer_array[k] =  "1/4";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.35 =";
+        answer_array[k] =  "7/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.45 =";
+        answer_array[k] =  "9/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.55 =";
+        answer_array[k] =  "11/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.65 =";
+        answer_array[k] =  "13/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.75 =";
+        answer_array[k] =  "3/4";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.85 =";
+        answer_array[k] =  "17/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.95 =";
+        answer_array[k] =  "19/20";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.2 =";
+        answer_array[k] =  "1/5";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.4 =";
+        answer_array[k] =  "2/5";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.6 =";
+        answer_array[k] =  "3/5";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.8 =";
+        answer_array[k] =  "4/5";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.04 =";
+        answer_array[k] =  "1/25";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.008 =";
+        answer_array[k] =  "1/125";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.125 =";
+        answer_array[k] =  "1/8";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.375 =";
+        answer_array[k] =  "3/8";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.625 =";
+        answer_array[k] =  "5/8";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.875 =";
+        answer_array[k] =  "7/8";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        question_array[k] = "<h2>問題</h2><p> 0.0625 =";
+        answer_array[k] =  "1/16";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;       
+        //インド式計算
+        //足し算
+        question_array[k] = "<h2>問題</h2><p> 35 + 49 =";
+        answer_array[k] =  "84";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 58 + 24 =";
+        answer_array[k] =  "82";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 67 + 18 =";
+        answer_array[k] =  "85";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 29 + 45 + 98 =";
+        answer_array[k] =  "172";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 96 + 67 + 81 =";
+        answer_array[k] =  "244";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 52 + 47 + 75 + 46 =";
+        answer_array[k] =  "220";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 395 + 486 + 812 + 798 =";
+        answer_array[k] =  "2491";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 78253 + 46328 + 50964 + 78195 =";
+        answer_array[k] =  "253740";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 33885 + 76293 + 48725 + 36450 =";
+        answer_array[k] =  "195353";
+        num_calc[k] = 1; //出現回数       
+        k = k + 1;     
+        //引き算
+        question_array[k] = "<h2>問題</h2><p> 64 - 27 =";
+        answer_array[k] =  "37";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;          
+        question_array[k] = "<h2>問題</h2><p> 81 - 36 =";
+        answer_array[k] =  "45";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 75 - 58 =";
+        answer_array[k] =  "17";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 94 - 65 =";
+        answer_array[k] =  "29";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;     
+        question_array[k] = "<h2>問題</h2><p> 1000 - 351 =";
+        answer_array[k] =  "649";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;         
+        question_array[k] = "<h2>問題</h2><p> 10000 - 6506 =";
+        answer_array[k] =  "3494";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;     
+        //足し算引き算
+        question_array[k] = "<h2>問題</h2><p> 93 - 67 + 40 - 34 + 46 =";
+        answer_array[k] =  "78";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 485 - 376 + 560 - 689 + 121 =";
+        answer_array[k] =  "101";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 3850 - 2796 + 1385 - 4785 + 7028 =";
+        answer_array[k] =  "4682";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;         
+        //掛け算 パターン1
+        question_array[k] = "<h2>問題</h2><p> 95 × 95 =";
+        answer_array[k] =  "9025";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 77 × 73 =";
+        answer_array[k] =  "5621";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;    
+        question_array[k] = "<h2>問題</h2><p> 62 × 68 =";
+        answer_array[k] =  "4216";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;    
+        //掛け算 パターン2
+        question_array[k] = "<h2>問題</h2><p> 36 × 76 =";
+        answer_array[k] =  "2736";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 14 × 94=";
+        answer_array[k] =  "1316";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 83 × 23 =";
+        answer_array[k] =  "1909";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 65 × 45 =";
+        answer_array[k] =  "2925";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 72 × 32 =";
+        answer_array[k] =  "2304";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 59 × 59 =";
+        answer_array[k] =  "3481";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 27 × 87 =";
+        answer_array[k] =  "2349";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 41 × 61 =";
+        answer_array[k] =  "2501";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 98 × 18 =";
+        answer_array[k] =  "1764";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        question_array[k] = "<h2>問題</h2><p> 34 × 74 =";
+        answer_array[k] =  "2516";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;   
+        //掛け算 パターン3
+        question_array[k] = "<h2>問題</h2><p> 99 × 98 =";
+        answer_array[k] =  "9702";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 999 × 723 =";
+        answer_array[k] =  "722277";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 681 × 999 =";
+        answer_array[k] =  "680319";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 9999 × 268 =";
+        answer_array[k] =  "2679732";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 99 × 9999 =";
+        answer_array[k] =  "989901";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        //11の積
+        question_array[k] = "<h2>問題</h2><p> 248 × 11 =";
+        answer_array[k] =  "2728";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 6579 × 11 =";
+        answer_array[k] =  "72369";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        // 100に近い数の積 
+        question_array[k] = "<h2>問題</h2><p> 98 × 97 =";
+        answer_array[k] =  "9506";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 101 × 109 =";
+        answer_array[k] =  "11009";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 96 × 85 =";
+        answer_array[k] =  "8160";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 185 × 102 =";
+        answer_array[k] =  "18870";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 45 × 98 =";
+        answer_array[k] =  "4410";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 92 × 105 =";
+        answer_array[k] =  "9660";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 104 × 95 =";
+        answer_array[k] =  "9880";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 88 × 88 =";
+        answer_array[k] =  "7744";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 97 × 103 =";
+        answer_array[k] =  "9991";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        //1000に近い数の積
+        question_array[k] = "<h2>問題</h2><p> 985 × 996 =";
+        answer_array[k] =  "981060";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1150 × 1004 =";
+        answer_array[k] =  "1154600";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1017 × 1013 =";
+        answer_array[k] =  "1030221";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 365 × 995 =";
+        answer_array[k] =  "363175";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1465 × 1006 =";
+        answer_array[k] =  "1473790";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1048 × 958 =";
+        answer_array[k] =  "1003984";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1014 × 986 =";
+        answer_array[k] =  "999804";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1; 
+        question_array[k] = "<h2>問題</h2><p> 1026 × 998 =";
+        answer_array[k] =  "1023948";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;      
+        //50 30 60 に近い数
+        question_array[k] = "<h2>問題</h2><p> 43 × 49 =";
+        answer_array[k] =  "2107";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 34 × 32 =";
+        answer_array[k] =  "1088";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 68 × 65 =";
+        answer_array[k] =  "4420";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 71 × 76 =";
+        answer_array[k] =  "5396";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 57 × 54 =";
+        answer_array[k] =  "3078";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 47 × 41 =";
+        answer_array[k] =  "1927";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 39 × 36 =";
+        answer_array[k] =  "1404";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 62 × 64 =";
+        answer_array[k] =  "3968";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 78 × 75 =";
+        answer_array[k] =  "5850";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;  
+        question_array[k] = "<h2>問題</h2><p> 53 × 56 =";
+        answer_array[k] =  "2968";
+        num_calc[k] = 1; //出現回数 
+        k = k + 1;          
+
+        max_k = k;
+        arrayShuffle(question_array, answer_array, num_calc, max_k);
+        k = 0;
+        show(k);
+        const timer = document.getElementById('timer');
+        var startTime;
+        //startボタンを押した時にイベントが起動
+
+        startTime = Date.now();
+        console.log(startTime);
+        console.log(new Date(startTime))
+        countUp();
+
+        //coutUp()関数の中身
+        function countUp() {
+            const d = new Date(Date.now() - startTime);
+            const m = String(d.getMinutes()).padStart(2, "0");
+            const s = String(d.getSeconds()).padStart(2, "0");
+            
+            const ms = String(d.getMilliseconds()).padStart(3, "0");
+            timer.textContent = `${m}:${s},${ms}`;
+
+            stopwatch = setTimeout(() => {
+                countUp();
+            }, 10);
+        }
+        function arrayShuffle(a, b, c, len) {
+        for(var i = (len - 1); 0 < i; i--){
+            // 0〜(i+1)の範囲で値を取得
+
+            var r = Math.floor(Math.random() * (i + 1));
+            // 要素の並び替えを実行
+            var tmpa = a[i];
+            var tmpb = b[i];
+            var tmpc = c[i];
+            a[i] = a[r];
+            b[i] = b[r];
+            c[i] = c[r];
+            a[r] = tmpa;
+            b[r] = tmpb;
+            c[r] = tmpc;
+            }
+            return ;
+        }
+        function show(k) {
+            document.getElementById('board').innerHTML = question_array[k];
+        }
+        function getNextIdx(k){           
+            for( var x = k + 1; x < max_k; x++){
+                console.log("A", x);
+                if(num_calc[x] >= 1)
+                    return [x];
+            }
+            for(var x = 0; x < max_k; x++){
+                console.log("C", x, y);
+                if(num_calc[x] >= 1)
+                    return [x];
+            }
+        }
+        
+        function calc() {
+            let answer = document.getElementById('id01').value;
+            console.log(answer);
+            console.log(typeof(answer));
+
+            let result = (answer == answer_array[k]) ? true : false;
+            let response = "";
+            if (result) {
+                console.log("A");
+                num_calc[k] -= 1;
+                if(num_calc.flat().every(e => e == 0 )){
+                    response = "END";
+                    clearInterval(stopwatch);
+                    document.getElementById('board').innerHTML = response;
+                }
+                let idx = new Array(2);
+                console.log("C");
+                idx = getNextIdx(k);
+                k = idx[0];
+                response =  question_array[k]
+                document.getElementById('board').innerHTML = response;
+            }else{
+                num_calc[k] += 1;
+                response = question_array[k] + answer_array[k] + "</p>";
+                document.getElementById('board').innerHTML = response;
+            }
+            document.getElementById('id01').value = "";
+        }
+    
+    </script>
+    <input type="text" id="id01" autofocus>
+
+    <script>
+        var btn = document.getElementById('exe_botan');
+        // Enterキー押下時、送信処理が実行する
+        window.document.onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                calc();
+            }
+        }
+
+
+    </script>
+</body>
